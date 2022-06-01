@@ -1,0 +1,110 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="editRowModal">
+      <div class="modalHeader clearfix">
+        <div class="modal-about">
+          <div class="font-weight-bold p-t-5 ms-2 me-2 font-17">
+            {{dialogTitle}}</div>
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="vendorForm" style="overflow: hidden;">
+      <input type="hidden" formControlName="id" />
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-icon matSuffix>face</mat-icon>
+            <mat-error *ngIf="vendorForm.get('name').hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" required>
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="vendorForm.get('email').hasError('required') || vendorForm.get('email').touched">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Mobile No</mat-label>
+            <input matInput formControlName="mobileno" type="text">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="vendorForm.get('mobileno').hasError('required')">
+              Mobile No is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="text">
+            <mat-icon matSuffix>lock</mat-icon>
+            <mat-error *ngIf="vendorForm.get('password').hasError('required')">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-1">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address" type="text">
+            <mat-icon matSuffix>map</mat-icon>
+            <mat-error *ngIf="vendorForm.get('address').hasError('required')">
+              Address is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>City</mat-label>
+              <mat-select formControlName="cityid" required>
+                <mat-option *ngFor="let city of cities;" value="{{ city.id }}">
+                  {{ city.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="vendorForm.get('cityid').hasError('required')">
+                City is required
+              </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Pincode</mat-label>
+            <input matInput formControlName="pincode" type="text">
+            <mat-icon matSuffix>lock</mat-icon>
+            <mat-error *ngIf="vendorForm.get('pincode').hasError('required')">
+              Pincode is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row" align="end">
+            <button mat-raised-button color="primary" [type]="submit" [disabled]="!vendorForm.valid"
+            (click)="submit(vendorForm.value)">Save</button>
+            <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
