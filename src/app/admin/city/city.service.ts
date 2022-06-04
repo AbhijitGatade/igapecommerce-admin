@@ -26,8 +26,9 @@ export class CityService  extends UnsubscribeOnDestroyAdapter {
   }
 
   /** CRUD METHODS */
-  list(): void {
-    let formdata = {data:{}}
+  list(stateid): void {
+    let formdata = {stateid:stateid};
+    console.log(formdata);
     this.api.post("shared/city/list", formdata).subscribe((result:any)=>{
       if(result.data.status == "success"){
         this.isTblLoading = false;

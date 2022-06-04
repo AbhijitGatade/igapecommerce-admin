@@ -97,11 +97,11 @@
                                         {{row.title}}</mat-cell>
                                 </ng-container>
                                 <ng-container matColumnDef="picpath">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Pic Path</mat-header-cell>
-                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">
-                                        {{row.picpath}}
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Image</mat-header-cell>
+                                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> 
+                                      <img src="{{ baseurl + row.picpath }}" style="height:40px;">
                                     </mat-cell>
-                                </ng-container>
+                                  </ng-container>
                                 <ng-container matColumnDef="link">
                                     <mat-header-cell *matHeaderCellDef mat-sort-header>Link</mat-header-cell>
                                     <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)">

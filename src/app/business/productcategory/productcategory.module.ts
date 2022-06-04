@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { CityRoutingModule } from './city-routing.module';
+import { ProductcategoriesRoutingModule } from './productcategory-routing.module';
 import { ListComponent } from './list/list.component';
-
-
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorModule } from "@angular/material/paginator";
@@ -29,17 +26,20 @@ import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { MatTableExporterModule } from "mat-table-exporter";
 import { ComponentsModule } from 'src/app/shared/components/components.module';
 import { FormDialogComponent } from './list/dialogs/form-dialog/form-dialog.component';
-import { CityService } from './city.service';
+import { ProductcategoryService } from './productcategory.service';
+import { DeleteDialogComponent } from './list/dialogs/delete/delete.component';
 
 
 @NgModule({
   declarations: [
     ListComponent,
-    FormDialogComponent
+    FormDialogComponent,
+   DeleteDialogComponent,
+   FormDialogComponent
   ],
   imports: [
     CommonModule,
-    CityRoutingModule,
+    ProductcategoriesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MatTableModule,
@@ -64,6 +64,6 @@ import { CityService } from './city.service';
     MatTableExporterModule,
     ComponentsModule
   ],
-  providers: [CityService],
+  providers: [ProductcategoryService],
 })
-export class CityModule { }
+export class ProductcategoryModule { }

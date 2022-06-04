@@ -6,8 +6,8 @@ import {
   FormGroup,
   FormBuilder,
 } from "@angular/forms";
-import { City } from "../../../city.model";
-import { CityService } from "../../../city.service";
+import { Productcategory } from "../../../productcategory.model";
+import { ProductcategoryService } from "../../../productcategory.service";
 import { ApiService } from "src/app/igap/service/api.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 @Component({
@@ -18,30 +18,30 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class FormDialogComponent {
   action: string;
   dialogTitle: string;
-  cityForm: FormGroup;
-  city: City;
-  stateid = 0;
-  
+  productcategoriesForm: FormGroup;
+  productcategories: Productcategory;
+  image = "";
+
   constructor(
     public dialogRef: MatDialogRef<FormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public cityService: CityService,
+    public productcategoriesService: ProductcategoryService,
     private api:ApiService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar
   ) {
+    
+    
     // Set the defaults
     this.action = data.action;
-    this.stateid = data.stateid;
     if (this.action === "edit") {
-      this.dialogTitle = data.city.name;
-      this.city = data.city;
+      this.dialogTitle = data.productcategories.name;
+      this.productcategories = data.productcategories;
     } else {
-      this.dialogTitle = "New City";
-      this.city = new City({});
-      this.city.stateid = this.stateid;
+      this.dialogTitle = "New Product Category";
+      this.productcategories = new Productcategory({});
     }
-    this.cityForm = this.createContactForm();
+    this.productcategoriesForm = this.createContactForm();
   }
 
   formControl = new FormControl("", [Validators.required]);
@@ -56,14 +56,18 @@ export class FormDialogComponent {
 
   createContactForm(): FormGroup {
     return this.fb.group({
-      id: [this.city.id],
-      name: [this.city.name],
-      stateid: [this.city.stateid],
+      id: [this.productcategories.id],
+      businessid: [localStorage.getItem("userid")],
+      srno: [this.productcategories.srno],
+      imagecode: [""],
+      name: [this.productcategories.name]      
     });
   }
 
-  submit(formdata:City) {
-    this.cityService.save(formdata).subscribe((result:any)=>{
+  submit(formdata:Productcategory) {
+    formdata.imagecode = this.image;
+    console.log(formdata);
+    this.productcategoriesService.save(formdata).subscribe((result:any)=>{
       if(result.data.status == "success")
       {
         this.showNotification(
@@ -88,6 +92,18 @@ export class FormDialogComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }  
+
+  handleUpload(event:any){
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () =>{
+      if(reader.result != null)
+      {
+        this.image = reader.result.toString();
+      }
+    }
+  }
 
   showNotification(colorName, text, placementFrom, placementAlign) {
     this.snackBar.open(text, "", {

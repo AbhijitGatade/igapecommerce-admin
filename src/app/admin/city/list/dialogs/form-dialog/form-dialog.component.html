@@ -12,11 +12,12 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
+
   <div mat-dialog-content>
     <form class="register-form m-4" [formGroup]="cityForm" style="overflow: hidden;">
       <input type="hidden" formControlName="id" />
       <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" required>
@@ -26,18 +27,16 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-          <mat-form-field class="example-full-width" appearance="outline">
-            <mat-label>talukaid</mat-label>
-            <input matInput formControlName="talukaid" required>
-            <mat-icon matSuffix>email</mat-icon>
-            <mat-error *ngIf="cityForm.get('talukaid').hasError('required') || cityForm.get('talukaid').touched">
-              talukaid is required
-            </mat-error>
-          </mat-form-field>
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <div class="example-button-row" align="end">
+              <button mat-raised-button color="primary" [type]="submit" [disabled]="!cityForm.valid"
+                (click)="submit(cityForm.value)">Save</button>
+              <button mat-raised-button color="warn" (click)="onNoClick()" tabindex="-1">Cancel</button>
+            </div>
+          </div>
         </div>
       </div>
-    
     </form>
   </div>
 </div>

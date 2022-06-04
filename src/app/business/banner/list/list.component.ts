@@ -12,6 +12,7 @@ import { BehaviorSubject, fromEvent, map, merge, Observable } from 'rxjs';
 import { ApiService } from 'src/app/igap/service/api.service';
 import { BannerService } from '../banner.service';
 import { Banner } from '../banner.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-crud',
@@ -34,6 +35,8 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
   index: number;
   id: number;
   banner: Banner | null;
+  baseurl = environment.apiUrl;
+  
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
@@ -110,12 +113,12 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
     });
     this.subs.sink = dialogRef.afterClosed().subscribe((result) => {    
         this.loadData();
-        this.showNotification(
-          "snackbar-danger",
-          "Delete Successful",
-          "bottom",
-          "center"
-        );
+        // this.showNotification(
+        //   "snackbar-danger",
+        //   "Delete Successful",
+        //   "bottom",
+        //   "center"
+        // );
     });
   }
   private refreshTable() {

@@ -7,4 +7,3 @@ export class State {
         this.name = state.name || "";
     }
   }
-  

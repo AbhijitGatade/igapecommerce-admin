@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Banner } from "./banner.model";
+import { Pincode } from "./pincode.model";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { ApiService } from "src/app/igap/service/api.service";
 @Injectable()
-export class BannerService extends UnsubscribeOnDestroyAdapter {
+export class PincodeService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
-  dataChange: BehaviorSubject<Banner[]> = new BehaviorSubject<Banner[]>(
+  dataChange: BehaviorSubject<Pincode[]> = new BehaviorSubject<Pincode[]>(
     []
   );
   // Temporarily stores data from dialogs
@@ -15,7 +15,7 @@ export class BannerService extends UnsubscribeOnDestroyAdapter {
     super();
   }
 
-  get data(): Banner[] {
+  get data(): Pincode[] {
     return this.dataChange.value;
   }
 
@@ -25,11 +25,12 @@ export class BannerService extends UnsubscribeOnDestroyAdapter {
 
   /** CRUD METHODS */
   list(): void {
-    let formdata = {businessid:localStorage.getItem("userid")}
-    this.api.post("business/banner/list", formdata).subscribe((result:any)=>{
+    let formdata = {data:{}}
+    this.api.post("igap/pincode/list", formdata).subscribe((result:any)=>{
       if(result.data.status == "success"){
         this.isTblLoading = false;
         this.dataChange.next(result.data.data);
+        console.log(result.data.data);
       }
       else{
         this.isTblLoading = false;
@@ -37,13 +38,12 @@ export class BannerService extends UnsubscribeOnDestroyAdapter {
     });
   }
 
-  save(banner: Banner) {
-    console.log(banner);
-    return this.api.post("business/banner/save", banner);
+  save(pincode: Pincode) {
+    return this.api.post("igap/pincode/save", pincode);
   }
   
   delete(id: number): void {
-    this.api.post("business/banner/delete", {id:id}).subscribe((result:any) => {
+    this.api.post("igap/pincode/delete", {id:id}).subscribe((result:any) => {
       if(result.data.status == "success")
         return true;
       else

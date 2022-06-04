@@ -69,8 +69,8 @@ export const ROUTES: RouteInfo[] = [
 
   {
     path: "",
-    title: "Business Masters",
-    moduleName: "businessmasters",
+    title: "Administration",
+    moduleName: "administration",
     iconType: "feather",
     icon: "monitor",
     class: "menu-toggle",
@@ -117,6 +117,20 @@ export const ROUTES: RouteInfo[] = [
         role: ["admin"],
         submenu: [],
       },
+    ],
+  },
+  {
+    path: "",
+    title: "E-Commerce",
+    moduleName: "ecommerce",
+    iconType: "feather",
+    icon: "monitor",
+    class: "menu-toggle",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["admin"],
+    submenu: [
       {
         path: "/admin/productcategories",
         title: "Product Categories",
@@ -133,11 +147,12 @@ export const ROUTES: RouteInfo[] = [
     ],
   },
 
+
   // Vendor Modules
   {
     path: "/vendor/dashboard",
     title: "Dashboard",
-    moduleName: "admin",
+    moduleName: "vendor",
     iconType: "feather",
     icon: "airplay",
     class: "",
@@ -146,8 +161,20 @@ export const ROUTES: RouteInfo[] = [
     badgeClass: "",
     role: ["vendor"],
     submenu: [],
-  },
-  
+  }, 
+  {
+    path: "/vendor/profile",
+    title: "Profile",
+    moduleName: "vendor",
+    iconType: "feather",
+    icon: "user",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["vendor"],
+    submenu: [],
+  },  
   {
     path: "",
     title: "Vendor Masters",
@@ -183,6 +210,19 @@ export const ROUTES: RouteInfo[] = [
     moduleName: "business",
     iconType: "feather",
     icon: "airplay",
+    class: "",
+    groupTitle: false,
+    badge: "",
+    badgeClass: "",
+    role: ["business"],
+    submenu: [],
+  },  
+  {
+    path: "/business/profile",
+    title: "Profile",
+    moduleName: "business",
+    iconType: "feather",
+    icon: "user",
     class: "",
     groupTitle: false,
     badge: "",

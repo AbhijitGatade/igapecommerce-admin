@@ -3,8 +3,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialog } from "@angular/material/dialog";
 import { UnsubscribeOnDestroyAdapter } from 'src/app/shared/UnsubscribeOnDestroyAdapter';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
-import { State } from '../state.model';
-import { StateService } from '../state.service';
+import { Productcategory } from '../productcategory.model';
+import { ProductcategoryService } from '../productcategory.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -12,6 +12,7 @@ import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component
 import { DeleteDialogComponent } from './dialogs/delete/delete.component';
 import { BehaviorSubject, fromEvent, map, merge, Observable } from 'rxjs';
 import { ApiService } from 'src/app/igap/service/api.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-crud',
@@ -22,21 +23,23 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
   
   displayedColumns = [
     // "select",
-    "name",
-    "districtcount",
-    "citycount",
-    "actions",
+    "srno",
+    "picpath",
+    "name",    
+    "actions"
   ];
-  exampleDatabase: StateService | null;
-  dataSource: StateDataSource | null;
-  selection = new SelectionModel<State>(true, []);
+  exampleDatabase: ProductcategoryService | null;
+  dataSource: ProductcategoryDataSource | null;
+  selection = new SelectionModel<Productcategory>(true, []);
   index: number;
   id: number;
-  state: State | null;
+  baseurl = environment.apiUrl;
+
+  productcategories: Productcategory | null;
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
-    public stateService: StateService,
+    public productcateg: ProductcategoryService,
     private snackBar: MatSnackBar
   ) {
     super();
@@ -63,7 +66,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
     }
     const dialogRef = this.dialog.open(FormDialogComponent, {
       data: {
-        state: this.state,
+        productcategories: this.productcategories,
         action: "add",
       },
       direction: tempDirection,
@@ -83,7 +86,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
     }
     const dialogRef = this.dialog.open(FormDialogComponent, {
       data: {
-        state: row,
+        productcategories: row,
         action: "edit",
       },
       direction: tempDirection,
@@ -146,7 +149,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
       // console.log(this.dataSource.renderedData.findIndex((d) => d === item));
       this.exampleDatabase.dataChange.value.splice(index, 1);
       this.refreshTable();
-      this.selection = new SelectionModel<State>(true, []);
+      this.selection = new SelectionModel<Productcategory>(true, []);
     });
     this.showNotification(
       "snackbar-danger",
@@ -157,8 +160,8 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
   }
 
   public loadData() {
-    this.exampleDatabase = new StateService(this.api);
-    this.dataSource = new StateDataSource(
+    this.exampleDatabase = new ProductcategoryService(this.api);
+    this.dataSource = new ProductcategoryDataSource(
       this.exampleDatabase,
       this.paginator,
       this.sort
@@ -181,7 +184,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
     });
   }
   // context menu
-  onContextMenu(event: MouseEvent, item: State) {
+  onContextMenu(event: MouseEvent, item: Productcategory) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + "px";
     this.contextMenuPosition.y = event.clientY + "px";
@@ -191,7 +194,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
   }
 }
 
-export class StateDataSource extends DataSource<State> {
+export class ProductcategoryDataSource extends DataSource<Productcategory> {
   filterChange = new BehaviorSubject("");
   get filter(): string {
     return this.filterChange.value;
@@ -199,10 +202,10 @@ export class StateDataSource extends DataSource<State> {
   set filter(filter: string) {
     this.filterChange.next(filter);
   }
-  filteredData: State[] = [];
-  renderedData: State[] = [];
+  filteredData: Productcategory[] = [];
+  renderedData: Productcategory[] = [];
   constructor(
-    public stateService: StateService,
+    public productcategoriesService: ProductcategoryService,
     public paginator: MatPaginator,
     public _sort: MatSort
   ) {
@@ -211,23 +214,28 @@ export class StateDataSource extends DataSource<State> {
     this.filterChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
   /** Connect function called by the table to retrieve one stream containing the data to render. */
-  connect(): Observable<State[]> {
+  connect(): Observable<Productcategory[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
     const displayDataChanges = [
-      this.stateService.dataChange,
+      this.productcategoriesService.dataChange,
       this._sort.sortChange,
       this.filterChange,
       this.paginator.page,
     ];
-    this.stateService.list();
+    this.productcategoriesService.list();
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
-        this.filteredData = this.stateService.data
+        this.filteredData = this.productcategoriesService.data
           .slice()
-          .filter((state: State) => {
+          .filter((productcategories: Productcategory) => {
             const searchStr = (
-              state.name
+              productcategories.businessid +
+              productcategories.srno +
+              productcategories.picpath +
+              productcategories.name +
+              productcategories.imagecode 
+              
              ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -245,7 +253,7 @@ export class StateDataSource extends DataSource<State> {
   }
   disconnect() {}
   /** Returns a sorted copy of the database data. */
-  sortData(data: State[]): State[] {
+  sortData(data: Productcategory[]): Productcategory[] {
     if (!this._sort.active || this._sort.direction === "") {
       return data;
     }
@@ -256,8 +264,20 @@ export class StateDataSource extends DataSource<State> {
         case "id":
           [propertyA, propertyB] = [a.id, b.id];
           break;
-        case "name":
-          [propertyA, propertyB] = [a.name, b.name];
+        case "businessid":
+          [propertyA, propertyB] = [a.businessid, b.businessid];
+          break;
+        case "srno":
+          [propertyA, propertyB] = [a.srno, b.srno];
+          break;
+        case "picpath":
+          [propertyA, propertyB] = [a.picpath, b.picpath];
+          break;
+          case "name":
+            [propertyA, propertyB] = [a.name, b.name];
+            break;
+        case "imagecode":
+          [propertyA, propertyB] = [a.imagecode, b.imagecode];
           break;
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;

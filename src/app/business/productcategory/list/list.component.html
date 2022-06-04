@@ -2,7 +2,8 @@
     <div class="content-block">
       <div class="block-header">
         <!-- breadcrumb -->
-        <app-breadcrumb [title]="'States'" [items]="['Masters']" [active_item]="'States'"></app-breadcrumb>
+        <app-breadcrumb [title]="'Product Categories'" [items]="['Masters']" [active_item]="'Product Categories'">
+        </app-breadcrumb>
       </div>
       <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -86,31 +87,31 @@
                     </mat-cell>
                   </ng-container>
                   <!-- ID Column -->
-                  <ng-container matColumnDef="id">
+                  <!-- <ng-container matColumnDef="id">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
                     <mat-cell *matCellDef="let row">{{row.id}}</mat-cell>
+                  </ng-container> -->
+                  <ng-container matColumnDef="businessid">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Businessid</mat-header-cell>
+                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> {{row.businessid}}</mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="srno">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Sr.No</mat-header-cell>
+                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> {{row.srno}}
+                    </mat-cell>
+                  </ng-container>
+                  <ng-container matColumnDef="picpath">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Image</mat-header-cell>
+                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> 
+                      <img src="{{ baseurl + row.picpath }}" style="height:40px;">
+                    </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="name">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> {{row.name}}</mat-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="districtcount">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>District Count</mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                      <a class="btn btn-success btn-sm" [routerLink]="['/admin/districts/' + row.id]" routerLinkActive="router-link-active" >
-                        Districts - {{row.districtcount}}
-                      </a>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name </mat-header-cell>
+                    <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)"> {{row.name}}
                     </mat-cell>
                   </ng-container>
-                  <ng-container matColumnDef="citycount">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>City Count</mat-header-cell>
-                    <mat-cell *matCellDef="let row">
-                      <a class="btn btn-success btn-sm" [routerLink]="['/admin/cities/' + row.id]" routerLinkActive="router-link-active" >
-                        Cities - {{row.citycount}}
-                      </a>
-                    </mat-cell>
-                  </ng-container>
-                
+                  
                   
                   <!-- actions -->
                   <ng-container matColumnDef="actions">

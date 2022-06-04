@@ -12,6 +12,8 @@ import { FormDialogComponent } from './dialogs/form-dialog/form-dialog.component
 import { DeleteDialogComponent } from './dialogs/delete/delete.component';
 import { BehaviorSubject, fromEvent, map, merge, Observable } from 'rxjs';
 import { ApiService } from 'src/app/igap/service/api.service';
+import { ActivatedRoute } from '@angular/router';
+import { State } from '../../state/state.model';
 
 @Component({
   selector: 'app-crud',
@@ -23,20 +25,23 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
   displayedColumns = [
     // "select",
     "name",
-    "talukaid",
     "actions",
+    
   ];
   exampleDatabase: CityService | null;
   dataSource: CityDataSource | null;
   selection = new SelectionModel<City>(true, []);
   index: number;
   id: number;
+  stateid:number;
+  state:any;
   city: City | null;
   constructor(
     public api: ApiService,
     public dialog: MatDialog,
     public cityService: CityService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private route:ActivatedRoute
   ) {
     super();
   }
@@ -47,6 +52,10 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
   contextMenu: MatMenuTrigger;
   contextMenuPosition = { x: "0px", y: "0px" };
   ngOnInit() {
+    this.stateid = Number(this.route.snapshot.paramMap.get("stateid"));
+    this.api.post("shared/state/get", {id:this.stateid}).subscribe((result:any)=>{      
+      this.state = result.data.data[0];
+    });    
     this.loadData();
   }
   refresh() {
@@ -63,6 +72,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
     const dialogRef = this.dialog.open(FormDialogComponent, {
       data: {
         city: this.city,
+        stateid:this.stateid,
         action: "add",
       },
       direction: tempDirection,
@@ -83,6 +93,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
     const dialogRef = this.dialog.open(FormDialogComponent, {
       data: {
         city: row,
+        stateid:this.stateid,
         action: "edit",
       },
       direction: tempDirection,
@@ -162,6 +173,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
       this.paginator,
       this.sort
     );
+    this.dataSource.stateid = this.stateid;
     this.subs.sink = fromEvent(this.filter.nativeElement, "keyup").subscribe(
       () => {
         if (!this.dataSource) {
@@ -192,6 +204,7 @@ export class ListComponent extends UnsubscribeOnDestroyAdapter implements OnInit
 
 export class CityDataSource extends DataSource<City> {
   filterChange = new BehaviorSubject("");
+  stateid = 0;
   get filter(): string {
     return this.filterChange.value;
   }
@@ -218,7 +231,7 @@ export class CityDataSource extends DataSource<City> {
       this.filterChange,
       this.paginator.page,
     ];
-    this.cityService.list();
+    this.cityService.list(this.stateid);
     return merge(...displayDataChanges).pipe(
       map(() => {
         // Filter data
@@ -226,7 +239,9 @@ export class CityDataSource extends DataSource<City> {
           .slice()
           .filter((city: City) => {
             const searchStr = (
-              city.name
+              city.name +
+              city.stateid 
+             
              ).toLowerCase();
             return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
           });
@@ -258,9 +273,10 @@ export class CityDataSource extends DataSource<City> {
         case "name":
           [propertyA, propertyB] = [a.name, b.name];
           break;
-          case "talukaid":
-            [propertyA, propertyB] = [a.name, b.talukaid];
-            break;
+        case "stateid":
+          [propertyA, propertyB] = [a.stateid, b.stateid];
+          break;
+         
       }
       const valueA = isNaN(+propertyA) ? propertyA : +propertyA;
       const valueB = isNaN(+propertyB) ? propertyB : +propertyB;

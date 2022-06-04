@@ -20,6 +20,7 @@ export class FormDialogComponent {
   dialogTitle: string;
   bannerForm: FormGroup;
   banner: Banner;
+  image = "";
 
   constructor(
     public dialogRef: MatDialogRef<FormDialogComponent>,
@@ -57,15 +58,16 @@ export class FormDialogComponent {
   createContactForm(): FormGroup {
     return this.fb.group({
       id: [this.banner.id],
-      businessid: [this.banner.businessid],
+      businessid: localStorage.getItem("userid"),
       title: [this.banner.title],
-      imagecontent: [""],
+      imagecode: [""],
       link: [this.banner.link],
       srno: [this.banner.srno],
     });
   }
 
   submit(formdata:Banner) {
+    formdata.imagecode = this.image;
     this.bannerService.save(formdata).subscribe((result:any)=>{
       if(result.data.status == "success")
       {
@@ -91,6 +93,19 @@ export class FormDialogComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }  
+
+  
+  handleUpload(event:any){
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () =>{
+      if(reader.result != null)
+      {
+        this.image = reader.result.toString();
+      }
+    }
+  }
 
   showNotification(colorName, text, placementFrom, placementAlign) {
     this.snackBar.open(text, "", {

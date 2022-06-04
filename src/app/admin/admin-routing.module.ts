@@ -18,7 +18,7 @@ const routes: Routes = [
       import("./district/district.module").then((m) => m.DistrictModule),
   },
   {
-    path: "cities",
+    path: "cities/:stateid",
     loadChildren: () =>
       import("./city/city.module").then((m) => m.CityModule),
   },

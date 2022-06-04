@@ -2,7 +2,7 @@ export class Banner {
     id: number;
     businessid: number;
     title: string;
-    picpath: string;
+    imagecode: string;
     link: string;
     srno:number;
   
@@ -10,7 +10,7 @@ export class Banner {
         this.id = banner.id || 0;
         this.businessid = banner.businessid || 0;
         this.title = banner.title || "";
-        this.picpath = banner.picpath || "";
+        this.imagecode = banner.imagecode || "";
         this.link = banner.link || "";
         this.srno = banner.srno || 0;
     }

@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { Banner } from "./banner.model";
+import { Productcategory } from "./productcategory.model";
 import { UnsubscribeOnDestroyAdapter } from "src/app/shared/UnsubscribeOnDestroyAdapter";
 import { ApiService } from "src/app/igap/service/api.service";
 @Injectable()
-export class BannerService extends UnsubscribeOnDestroyAdapter {
+export class ProductcategoryService extends UnsubscribeOnDestroyAdapter {
   isTblLoading = true;
-  dataChange: BehaviorSubject<Banner[]> = new BehaviorSubject<Banner[]>(
+  dataChange: BehaviorSubject<Productcategory[]> = new BehaviorSubject<Productcategory[]>(
     []
   );
   // Temporarily stores data from dialogs
@@ -15,7 +15,7 @@ export class BannerService extends UnsubscribeOnDestroyAdapter {
     super();
   }
 
-  get data(): Banner[] {
+  get data(): Productcategory[] {
     return this.dataChange.value;
   }
 
@@ -26,7 +26,7 @@ export class BannerService extends UnsubscribeOnDestroyAdapter {
   /** CRUD METHODS */
   list(): void {
     let formdata = {businessid:localStorage.getItem("userid")}
-    this.api.post("business/banner/list", formdata).subscribe((result:any)=>{
+    this.api.post("business/productcategory/list", formdata).subscribe((result:any)=>{
       if(result.data.status == "success"){
         this.isTblLoading = false;
         this.dataChange.next(result.data.data);
@@ -37,13 +37,12 @@ export class BannerService extends UnsubscribeOnDestroyAdapter {
     });
   }
 
-  save(banner: Banner) {
-    console.log(banner);
-    return this.api.post("business/banner/save", banner);
+  save(productcategories: Productcategory) {
+    return this.api.post("business/productcategory/save", productcategories);
   }
   
   delete(id: number): void {
-    this.api.post("business/banner/delete", {id:id}).subscribe((result:any) => {
+    this.api.post("business/productcategory/delete", {id:id}).subscribe((result:any) => {
       if(result.data.status == "success")
         return true;
       else
